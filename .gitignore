@@ -1,0 +1,4 @@
+# standart  ignoring
+target
+.idea
+*.iml
