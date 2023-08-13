@@ -42,20 +42,15 @@ public class JavaSeleniumTest {
     public String gender = "Мужской";
     @BeforeAll
     public static void webDriverSetup(){
-        //WebDriverManager.chromedriver().setup();
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\yazhuk20\\Desktop\\chromedriver1.exe");
+        WebDriverManager.chromedriver().setup();
+
     }
     public void setUpFullScreen(){
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-fullscreen");
         driver = new ChromeDriver(options);
     }
-      public void setUpIncognito(){
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("---incognito");
-        driver = new ChromeDriver(options);
-    }
-    @AfterEach
+      @AfterEach
     public void setDown(){
         if (driver != null){
             driver.close();
@@ -66,7 +61,6 @@ public class JavaSeleniumTest {
     public void otusTest() throws FileNotFoundException, InterruptedException, NoSuchElementException {
         log.debug("Тестовое сообщение");
 //      Set incognito and full screen modes
-        setUpIncognito();
         setUpFullScreen();
 //      Open URL
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -118,15 +112,13 @@ public class JavaSeleniumTest {
             System.out.println("Нажимаю предпочтит способ связи email " + emailPreferable.isSelected() );
         }
 
-        //Отжать  и снова нажать кнопку Skype в разделе способ связи
+        //Отжать  кнопку Skype
         driver.findElements(By.cssSelector("label>div")).get(3).click();
        waitingForElement(By.cssSelector("button[data-empty='Способ связи']"),By.cssSelector("span.placeholder"));
 
 //      Нажать кнопку Skype
-        WebDriverWait wait4 = new WebDriverWait(driver,10);
-        WebElement typeOfRelation = driver.findElement(By.cssSelector("button[title='Skype']"));
-        wait4.until(ExpectedConditions.visibilityOf(typeOfRelation));
-        driver.findElement(By.cssSelector("button[title='Skype']")).click();
+
+       driver.findElement(By.cssSelector("button[title='Skype']")).click();
 
         String skype = "input[name='contact-0-value']";
         clearAndEnter(By.cssSelector(skype),skypeLogin);
@@ -147,7 +139,6 @@ public class JavaSeleniumTest {
         driver.close();
         driver.quit();
 //        Открыть https://otus.ru в "чистом браузере"
-        setUpIncognito();
         setUpFullScreen();
 //        Авторизоваться на сайте.  Войти в личный кабинет
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -182,7 +173,6 @@ public class JavaSeleniumTest {
 
     public void cookie() {
 
-        driver.get("https://ya.ru");
         driver.manage().addCookie((new Cookie("Cookie1", "Otus1")));
         driver.manage().addCookie((new Cookie("Cookie2", "Otus2")));
         Cookie cookie = new Cookie("Cooki3", "Otus3");
@@ -230,7 +220,7 @@ public class JavaSeleniumTest {
 
     public void waitingForElement(By firstClick, By secondClick){
         driver.findElement(firstClick).click();
-        WebDriverWait wait = new WebDriverWait(driver,10);
+        WebDriverWait wait = new WebDriverWait(driver,15);
         WebElement webElement = driver.findElement(secondClick);
         wait.until(ExpectedConditions.visibilityOf(webElement));
         driver.findElement(secondClick).click();
